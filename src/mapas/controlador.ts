@@ -4,7 +4,7 @@ import type { Datos, Fondo, Seleccion } from '../tipos'
 import { enriquecerDistritos, enriquecerProvincias, puntosDistrito, puntosGeojson, ubigeosConAlerta } from '../logica/agregados'
 import { actualizarPuntos, aplicarFondoTerritorio, instalarCasos, instalarTerritorio, marcarSeleccion } from './capas'
 import { anadirBanderas } from './banderas'
-import { estiloParaFondo } from './estiloBase'
+import { esErrorDeFondo, estiloParaFondo } from './estiloBase'
 import './worker'
 
 export interface Callbacks {
@@ -15,8 +15,8 @@ export interface Callbacks {
 }
 
 const LIMITES_PERU: [[number, number], [number, number]] = [[-81.6, -18.6], [-68.4, 0.3]]
-const FUENTES_DE_FONDO = ['base', 'openmaptiles']
 const ERRORES_PARA_AVISAR = 4
+const ESPERA_ESTILO_MS = 8000
 const TODAS = new Set([1, 2, 3, 4, 5])
 
 export class ControladorMapas {
@@ -29,6 +29,8 @@ export class ControladorMapas {
   private cb: Callbacks
   private bloqueo = false
   private erroresFondo = 0
+  private cargado = new Map<MapaGL, boolean>()
+  private vigilancia: number | undefined
   private marcadores: Marker[] = []
   private tip: HTMLDivElement
   private provincias: FeatureCollection
@@ -59,6 +61,7 @@ export class ControladorMapas {
     this.casos = this.crear(contCasos)
 
     this.territorio.on('style.load', () => {
+      this.cargado.set(this.territorio, true)
       instalarTerritorio(this.territorio, {
         departamentos: datos.departamentos, provincias: this.provincias, distritos: this.distritosGeo,
         puntos: this.puntosTodos(),
@@ -66,7 +69,8 @@ export class ControladorMapas {
       marcarSeleccion(this.territorio, this.seleccion)
     })
     this.casos.on('style.load', () => {
-      instalarCasos(this.casos, { departamentos: datos.departamentos, distritos: this.distritosGeo, puntos: this.puntosActivos() })
+      this.cargado.set(this.casos, true)
+      instalarCasos(this.casos, { departamentos: datos.departamentos, distritos: this.distritosGeo, puntos: this.puntosActivos() }, this.fondo)
       marcarSeleccion(this.casos, this.seleccion)
     })
 
@@ -77,6 +81,17 @@ export class ControladorMapas {
     this.sincronizar(this.territorio, this.casos)
     this.sincronizar(this.casos, this.territorio)
     this.eventos()
+    this.vigilarEstilo()
+  }
+
+  // OpenFreeMap se pide por URL: si está bloqueada, MapLibre no emite style.load y los mapas quedarían en
+  // blanco sin aviso. Si no cargó en ESPERA_ESTILO_MS, se avisa para que el usuario elija «Sin fondo».
+  private vigilarEstilo(): void {
+    window.clearTimeout(this.vigilancia)
+    if (this.fondo !== 'openfreemap') return
+    this.vigilancia = window.setTimeout(() => {
+      if (this.cargado.get(this.territorio) !== true || this.cargado.get(this.casos) !== true) this.cb.alFalloFondo()
+    }, ESPERA_ESTILO_MS)
   }
 
   private crear(contenedor: HTMLElement): MapaGL {
@@ -92,9 +107,10 @@ export class ControladorMapas {
       canvasContextAttributes: { preserveDrawingBuffer: true }, // permite verificar con capturas de pantalla
     })
     mapa.touchZoomRotate.disableRotation()
+    this.cargado.set(mapa, false)
     mapa.on('error', (e) => {
       const id = (e as unknown as { sourceId?: string }).sourceId
-      if (this.fondo !== 'ninguno' && id && FUENTES_DE_FONDO.includes(id) && ++this.erroresFondo === ERRORES_PARA_AVISAR) {
+      if (esErrorDeFondo(this.fondo, id, this.cargado.get(mapa) === true) && ++this.erroresFondo === ERRORES_PARA_AVISAR) {
         this.cb.alFalloFondo()
       }
     })
@@ -160,11 +176,14 @@ export class ControladorMapas {
   setFondo(f: Fondo): void {
     this.fondo = f
     this.erroresFondo = 0
+    this.cargado.set(this.territorio, false)
+    this.cargado.set(this.casos, false)
     // diff:false fuerza la recarga completa del estilo y con ella el evento style.load,
     // donde se vuelven a instalar las capas propias.
     this.territorio.setStyle(estiloParaFondo(f), { diff: false })
     this.casos.setStyle(estiloParaFondo(f), { diff: false })
     aplicarFondoTerritorio(this.territorio, f)
+    this.vigilarEstilo()
   }
 
   setSeleccion(s: Seleccion): void {
@@ -188,6 +207,7 @@ export class ControladorMapas {
   }
 
   destruir(): void {
+    window.clearTimeout(this.vigilancia)
     for (const m of this.marcadores) m.remove()
     this.territorio.remove()
     this.casos.remove()

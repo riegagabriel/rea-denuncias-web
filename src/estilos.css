@@ -24,6 +24,7 @@ button { font: inherit; color: inherit; }
 .enc-titulo p { color: var(--suave); font-size: 12.5px; }
 .enc-corte { margin-left: auto; display: flex; flex-direction: column; justify-content: center; text-align: right; font-size: 12.5px; color: var(--suave); }
 .enc-corte b { color: var(--tinta); font-size: 15px; }
+.enc-corte small { font-size: 11px; max-width: 340px; overflow-wrap: anywhere; }
 .pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px auto 0; padding: 16px; max-width: 1500px; border-top: 1px solid var(--linea); }
 .pie img { height: 28px; width: auto; opacity: .35; }
 .pie p { font-size: 11px; color: var(--suave); text-align: right; line-height: 1.6; }

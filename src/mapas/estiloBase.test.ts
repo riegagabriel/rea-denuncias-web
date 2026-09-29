@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { FONDOS, URL_OPENFREEMAP, estiloParaFondo, pinturaCoropleta } from './estiloBase'
+import { FONDOS, URL_OPENFREEMAP, esErrorDeFondo, estiloParaFondo, opacidadRellenoPais, pinturaCoropleta } from './estiloBase'
 
 type Capa = { type: string; paint?: Record<string, number> }
 
@@ -48,5 +48,32 @@ describe('FONDOS', () => {
   it('ofrece los cuatro fondos y «Sin fondo» va primero', () => {
     expect(FONDOS.map((f) => f.id)).toEqual(['ninguno', 'gris', 'osm', 'openfreemap'])
     expect(FONDOS.every((f) => f.atribucion.length > 0)).toBe(true)
+  })
+})
+
+describe('opacidadRellenoPais (fondo visible dentro de Perú en el mapa de casos)', () => {
+  it('sin fondo el país se rellena; con cualquier fondo el relleno es transparente', () => {
+    expect(opacidadRellenoPais('ninguno')).toBe(1)
+    for (const f of ['gris', 'osm', 'openfreemap'] as const) expect(opacidadRellenoPais(f)).toBe(0)
+  })
+})
+
+describe('esErrorDeFondo (aviso de fondo bloqueado)', () => {
+  it('sin fondo nunca hay error de fondo', () => {
+    expect(esErrorDeFondo('ninguno', 'base', false)).toBe(false)
+  })
+  it('un error en la fuente de mosaicos cuenta', () => {
+    expect(esErrorDeFondo('gris', 'base', true)).toBe(true)
+    expect(esErrorDeFondo('openfreemap', 'openmaptiles', true)).toBe(true)
+  })
+  it('un error de una fuente propia no cuenta', () => {
+    expect(esErrorDeFondo('gris', 'dg', true)).toBe(false)
+  })
+  it('OpenFreeMap: un error sin fuente antes de cargar el estilo (URL bloqueada) cuenta', () => {
+    expect(esErrorDeFondo('openfreemap', undefined, false)).toBe(true)
+  })
+  it('OpenFreeMap: un error sin fuente con el estilo ya cargado no cuenta; en los raster tampoco', () => {
+    expect(esErrorDeFondo('openfreemap', undefined, true)).toBe(false)
+    expect(esErrorDeFondo('gris', undefined, false)).toBe(false)
   })
 })

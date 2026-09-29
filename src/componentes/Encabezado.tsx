@@ -23,6 +23,7 @@ export default function Encabezado({ config, meta }: { config: Config; meta: Met
       <div className="enc-corte">
         <span>Fecha de corte</span>
         <b id="fecha-corte">{meta.corte}</b>
+        <small id="fuente-datos" title={meta.nota_ubigeo}>Fuente: {meta.fuente}</small>
       </div>
     </header>
   )

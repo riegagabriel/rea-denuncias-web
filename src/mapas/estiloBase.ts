@@ -51,3 +51,19 @@ export function pinturaCoropleta(f: Fondo): PinturaCoropleta {
     opacidad: f === 'ninguno' ? 1 : f === 'gris' ? 0.74 : f === 'osm' ? 0.68 : 0.7,
   }
 }
+
+// El mapa de casos rellena el país con un color liso. Con un mapa base ese relleno lo taparía.
+export function opacidadRellenoPais(f: Fondo): number {
+  return f === 'ninguno' ? 1 : 0
+}
+
+// Fuentes de mosaicos de los fondos: 'base' (raster de OSM) y 'openmaptiles' (estilo de OpenFreeMap).
+export const FUENTES_DE_FONDO = ['base', 'openmaptiles']
+
+// ¿Este error de MapLibre significa que el fondo no cargó? Un error en una fuente de mosaicos, o (solo en
+// OpenFreeMap) un error sin fuente antes de que el estilo cargue, que es lo que pasa si su URL está bloqueada.
+export function esErrorDeFondo(fondo: Fondo, sourceId: string | undefined, estiloCargado: boolean): boolean {
+  if (fondo === 'ninguno') return false
+  if (sourceId && FUENTES_DE_FONDO.includes(sourceId)) return true
+  return fondo === 'openfreemap' && !sourceId && !estiloCargado
+}

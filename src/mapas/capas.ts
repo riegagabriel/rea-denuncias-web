@@ -1,7 +1,7 @@
 import type { ExpressionSpecification, GeoJSONSource, Map as MapaGL } from 'maplibre-gl'
 import type { FeatureCollection } from 'geojson'
 import type { Fondo, Seleccion } from '../tipos'
-import { pinturaCoropleta } from './estiloBase'
+import { opacidadRellenoPais, pinturaCoropleta } from './estiloBase'
 
 export interface FuentesTerritorio {
   departamentos: FeatureCollection
@@ -77,11 +77,11 @@ export function instalarTerritorio(mapa: MapaGL, f: FuentesTerritorio, fondo: Fo
   mapa.addLayer({ id: 'prov-sel', type: 'line', source: 'prov', filter: ['==', ['get', 'clave'], ''], paint: { 'line-color': '#111111', 'line-width': 2.4 } })
 }
 
-export function instalarCasos(mapa: MapaGL, f: FuentesCasos): void {
+export function instalarCasos(mapa: MapaGL, f: FuentesCasos, fondo: Fondo): void {
   fuente(mapa, 'deps', f.departamentos)
   fuente(mapa, 'dg', f.distritos)
   fuente(mapa, 'pts', f.puntos)
-  mapa.addLayer({ id: 'deps-fill', type: 'fill', source: 'deps', paint: { 'fill-color': '#f7f6f1', 'fill-opacity': 1 } })
+  mapa.addLayer({ id: 'deps-fill', type: 'fill', source: 'deps', paint: { 'fill-color': '#f7f6f1', 'fill-opacity': opacidadRellenoPais(fondo) } })
   mapa.addLayer({ id: 'deps-line', type: 'line', source: 'deps', paint: { 'line-color': '#b9b5a9', 'line-width': 0.8 } })
   capasVerificacion(mapa, ['==', ['get', 'ver0'], 1])
   mapa.addLayer({
