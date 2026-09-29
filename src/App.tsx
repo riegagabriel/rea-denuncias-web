@@ -6,6 +6,7 @@ import Panel from './componentes/Panel'
 import Pie from './componentes/Pie'
 import TablaCasos from './componentes/TablaCasos'
 import { useDatos } from './hooks/useDatos'
+import { useEsMovil } from './hooks/useEsMovil'
 import Mapas from './mapas/Mapas'
 import type { Fondo, Seleccion } from './tipos'
 
@@ -14,6 +15,8 @@ export default function App() {
   const [seleccion, setSeleccion] = useState<Seleccion>({ tipo: 'ninguna' })
   const [fondo, setFondo] = useState<Fondo>('gris')
   const [activas, setActivas] = useState<ReadonlySet<number>>(() => new Set([1, 2, 3, 4, 5]))
+  const movil = useEsMovil()
+  const [pestana, setPestana] = useState<'territorio' | 'casos'>('territorio')
   const acercar = useRef<(bbox: [number, number, number, number]) => void>(() => {})
 
   const alternar = useCallback((id: number) => {
@@ -36,8 +39,12 @@ export default function App() {
       <div className="principal">
         <div className="columna-mapas">
           <Cifras datos={datos} />
+          <div className="pestanas" role="group" aria-label="Mapa visible">
+            <button type="button" aria-pressed={pestana === 'territorio'} onClick={() => setPestana('territorio')}>Territorio</button>
+            <button type="button" aria-pressed={pestana === 'casos'} onClick={() => setPestana('casos')}>Casos</button>
+          </div>
           <Mapas
-            datos={datos} fondo={fondo} seleccion={seleccion} activas={activas} pestana="territorio"
+            datos={datos} fondo={fondo} seleccion={seleccion} activas={activas} pestana={pestana}
             alCambiarFondo={setFondo} alAlternarCategoria={alternar}
             alSeleccionarDistrito={alDistrito}
             alSeleccionarProvincia={(k) => setSeleccion({ tipo: 'provincia', clave: k })}
@@ -45,7 +52,16 @@ export default function App() {
             registrarAcercar={(fn) => { acercar.current = fn }}
           />
         </div>
-        <Panel datos={datos} seleccion={seleccion} alSeleccionarDistrito={alDistrito} alLimpiar={alLimpiar} alAcercar={(b) => acercar.current(b)} />
+        {movil ? (
+          seleccion.tipo !== 'ninguna' && (
+            <div className="hoja" role="dialog" aria-label="Detalle de la selección">
+              <button type="button" className="btn hoja-cerrar" onClick={alLimpiar}>Cerrar ✕</button>
+              <Panel datos={datos} seleccion={seleccion} alSeleccionarDistrito={alDistrito} alLimpiar={alLimpiar} alAcercar={(b) => acercar.current(b)} />
+            </div>
+          )
+        ) : (
+          <Panel datos={datos} seleccion={seleccion} alSeleccionarDistrito={alDistrito} alLimpiar={alLimpiar} alAcercar={(b) => acercar.current(b)} />
+        )}
       </div>
       <div className="graficos">
         <BarrasDepartamento casos={datos.casos} config={datos.config} />
