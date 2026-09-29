@@ -5,6 +5,7 @@ import { enriquecerDistritos, enriquecerProvincias, puntosDistrito, puntosGeojso
 import { actualizarPuntos, aplicarFondoTerritorio, instalarCasos, instalarTerritorio, marcarSeleccion } from './capas'
 import { anadirBanderas } from './banderas'
 import { estiloParaFondo } from './estiloBase'
+import './worker'
 
 export interface Callbacks {
   alSeleccionarDistrito(ubigeo: string): void
