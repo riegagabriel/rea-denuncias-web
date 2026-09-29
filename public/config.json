@@ -1,0 +1,23 @@
+{
+  "titulo": "Denuncias registradas en el REA por casos de probable golondrinaje",
+  "subtitulo": "Registro de Alertas Electorales · SDPEG · Dirección de Registro Electoral",
+  "pie": "Denuncias del Registro de Alertas Electorales · SDPEG · Dirección de Registro Electoral · RENIEC",
+  "categorias": [
+    { "id": 1, "nombre": "Impugnación o depuración de electores", "color": "#2a78d6",
+      "descripcion": "Se pide excluir, depurar o anular el domicilio de electores concretos señalados como no residentes, por lo general con lista nominal o constancia de no residencia." },
+    { "id": 2, "nombre": "Verificación o fiscalización de domicilio", "color": "#008300",
+      "descripcion": "Se pide que RENIEC verifique o fiscalice los domicilios de una localidad o de un grupo de electores, por un aumento atípico de electores o de cambios de domicilio." },
+    { "id": 3, "nombre": "Solicitud de padrón o información", "color": "#4a3aa7",
+      "descripcion": "Una institución o un ciudadano pide el padrón, estadísticas o información sobre cambios domiciliarios, sin pedir todavía una acción sobre electores concretos." },
+    { "id": 4, "nombre": "Denuncia o alerta preventiva", "color": "#1baf7a",
+      "descripcion": "Se pone en conocimiento de RENIEC un presunto traslado fraudulento de domicilios (queja, denuncia anónima o penal preventiva), sin pedir una acción concreta sobre el padrón." },
+    { "id": 5, "nombre": "Reclamo posterior a verificación o restitución", "color": "#e87ba4",
+      "descripcion": "Ciudadanos o instituciones cuestionan el resultado de una verificación o restitución de domicilio ya hecha por RENIEC (domicilio revertido o restituido, error en el proceso)." }
+  ],
+  "canales": {
+    "RENIEC": "#1baf7a",
+    "Ministerio Publico": "#eda100",
+    "Defensoria del Pueblo": "#e34948"
+  },
+  "canalSinAsignar": ["#898781", "#52514e", "#b9b5a8"]
+}
