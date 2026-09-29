@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/estilos.css"
+        ],
+        "createdAt": "2026-09-29T22:56:30.325Z",
+        "reason": "Borde izquierdo de .caso-card = color de la categoria: codificacion funcional que liga cada tarjeta del panel con la leyenda (boceto v8 aprobado por el usuario; el usuario no confirmo este detalle por separado). El filete decorativo de .nota se elimino."
+      }
+    ]
+  }
+}

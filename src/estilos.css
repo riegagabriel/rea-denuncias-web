@@ -86,7 +86,7 @@ button { font: inherit; color: inherit; }
 .caso-card p { margin-top: 5px; font-size: 13.5px; }
 .pill { display: inline-block; font-size: 11px; padding: 1px 7px; margin: 5px 4px 0 0; border-radius: 99px; background: var(--relleno); border: 1px solid var(--linea); }
 .albox { margin-top: 6px; padding: 5px 8px; border: 1px solid var(--alerta); border-radius: 6px; background: color-mix(in srgb, var(--alerta) 9%, transparent); font-size: 12.5px; }
-.nota { margin-top: 6px; padding-left: 8px; border-left: 3px solid var(--linea); font-size: 12px; color: var(--suave); }
+.nota { margin-top: 6px; padding: 5px 8px; border-radius: 6px; background: var(--relleno); font-size: 12px; color: var(--suave); }
 .vbox { margin-top: 12px; padding: 9px 10px; border: 1px solid var(--linea); border-radius: 8px; }
 .vbox h4 { font-size: 13px; margin-bottom: 4px; }
 .vbarra { display: flex; height: 11px; margin: 6px 0 4px; border-radius: 99px; overflow: hidden; background: var(--relleno); }
