@@ -1,4 +1,8 @@
 import { useCallback, useRef, useState } from 'react'
+import Cifras from './componentes/Cifras'
+import Encabezado from './componentes/Encabezado'
+import Panel from './componentes/Panel'
+import Pie from './componentes/Pie'
 import { useDatos } from './hooks/useDatos'
 import Mapas from './mapas/Mapas'
 import type { Fondo, Seleccion } from './tipos'
@@ -18,21 +22,30 @@ export default function App() {
       return s
     })
   }, [])
+  const alDistrito = useCallback((u: string) => setSeleccion({ tipo: 'distrito', ubigeo: u }), [])
+  const alLimpiar = useCallback(() => setSeleccion({ tipo: 'ninguna' }), [])
 
   if (error) return <div className="estado estado-error">Error cargando datos: {error}</div>
   if (!datos) return <div className="estado">Cargando denuncias REA…</div>
+
   return (
-    <div className="principal">
-      <div className="columna-mapas">
-        <Mapas
-          datos={datos} fondo={fondo} seleccion={seleccion} activas={activas} pestana="territorio"
-          alCambiarFondo={setFondo} alAlternarCategoria={alternar}
-          alSeleccionarDistrito={(u) => setSeleccion({ tipo: 'distrito', ubigeo: u })}
-          alSeleccionarProvincia={(k) => setSeleccion({ tipo: 'provincia', clave: k })}
-          alLimpiar={() => setSeleccion({ tipo: 'ninguna' })}
-          registrarAcercar={(fn) => { acercar.current = fn }}
-        />
+    <>
+      <Encabezado config={datos.config} meta={datos.meta} />
+      <div className="principal">
+        <div className="columna-mapas">
+          <Cifras datos={datos} />
+          <Mapas
+            datos={datos} fondo={fondo} seleccion={seleccion} activas={activas} pestana="territorio"
+            alCambiarFondo={setFondo} alAlternarCategoria={alternar}
+            alSeleccionarDistrito={alDistrito}
+            alSeleccionarProvincia={(k) => setSeleccion({ tipo: 'provincia', clave: k })}
+            alLimpiar={alLimpiar}
+            registrarAcercar={(fn) => { acercar.current = fn }}
+          />
+        </div>
+        <Panel datos={datos} seleccion={seleccion} alSeleccionarDistrito={alDistrito} alLimpiar={alLimpiar} alAcercar={(b) => acercar.current(b)} />
       </div>
-    </div>
+      <Pie config={datos.config} />
+    </>
   )
 }

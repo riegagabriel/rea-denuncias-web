@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { FeatureCollection } from 'geojson'
 import {
   casosDeDistrito, ciudadanosPorCategoria, conteoPorCanal, conteoPorCategoria, denunciasPorDepartamento,
-  enriquecerDistritos, enriquecerProvincias, filtrarCascada, formatoFecha, formatoMiles, opcionesCascada,
+  enriquecerDistritos, enriquecerProvincias, filtrarCascada, formatoFecha, formatoMiles, nombresProvincia, opcionesCascada,
   puntosDistrito, puntosGeojson, ubigeosConAlerta,
 } from './agregados'
 import { VERIFICACION, caso, distrito } from './fixtures'
@@ -111,6 +111,18 @@ describe('puntos del mapa de casos', () => {
     expect(fc.features[0].properties).toMatchObject({ u: '010101', n: 2, ver: 1, ver0: 0, color: '#2a78d6' })
     expect(fc.features[1].properties).toMatchObject({ u: '020202', n: 0, ver: 1, ver0: 1, color: '#141414' })
     expect(fc.features[0].geometry).toEqual({ type: 'Point', coordinates: [-77, -6] })
+  })
+})
+
+describe('nombresProvincia', () => {
+  const geo = { type: 'FeatureCollection', features: [
+    { type: 'Feature', properties: { clave: 'PUNO|SAN ROMAN', DEPARTAMEN: 'PUNO', PROVINCIA: 'SAN ROMAN' }, geometry: { type: 'Polygon', coordinates: [] } },
+  ] } as unknown as FeatureCollection
+  it('devuelve departamento y provincia de la geometría, aunque no haya distritos con denuncias', () => {
+    expect(nombresProvincia(geo, 'PUNO|SAN ROMAN')).toEqual({ departamento: 'PUNO', provincia: 'SAN ROMAN' })
+  })
+  it('si la clave no existe, cae al texto de la clave', () => {
+    expect(nombresProvincia(geo, 'ICA|PISCO')).toEqual({ departamento: 'ICA', provincia: 'PISCO' })
   })
 })
 

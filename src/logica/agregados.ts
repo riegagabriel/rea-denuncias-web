@@ -184,3 +184,10 @@ export function enriquecerDistritos(geo: FeatureCollection, distritos: Distrito[
     }),
   }
 }
+
+export function nombresProvincia(geo: FeatureCollection, clave: string): { departamento: string; provincia: string } {
+  const f = geo.features.find((x) => x.properties?.clave === clave)
+  if (f) return { departamento: String(f.properties?.DEPARTAMEN ?? ''), provincia: String(f.properties?.PROVINCIA ?? '') }
+  const [departamento = '', provincia = ''] = clave.split('|')
+  return { departamento, provincia }
+}
