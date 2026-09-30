@@ -9,8 +9,8 @@
       "descripcion": "Se solicita que RENIEC verifique o fiscalice los domicilios de una localidad o de un grupo de electores, por un aumento atípico de electores o de cambios de domicilio." },
     { "id": 3, "nombre": "Solicitud de padrón o información", "color": "#4a3aa7",
       "descripcion": "Una institución o un ciudadano pide el padrón, estadísticas o información sobre cambios domiciliarios, sin pedir todavía una acción sobre electores concretos." },
-    { "id": 4, "nombre": "Denuncia o alerta preventiva", "color": "#1baf7a",
-      "descripcion": "Se pone en conocimiento de RENIEC un presunto traslado fraudulento de domicilios (queja, denuncia anónima o penal preventiva), sin pedir una acción concreta sobre el padrón." },
+    { "id": 4, "nombre": "Denuncia o alerta preventiva de golondrinaje o transhumancia", "color": "#1baf7a",
+      "descripcion": "Se pone en conocimiento de RENIEC un presunto golondrinaje, un traslado fraudulento de domicilios o hechos vinculados, como amenazas o riesgo de conflicto (queja, denuncia anónima o penal, alerta preventiva), sin pedir una acción concreta sobre el padrón." },
     { "id": 5, "nombre": "Reclamo posterior a verificación o restitución", "color": "#e87ba4",
       "descripcion": "Ciudadanos o instituciones cuestionan el resultado de una verificación o restitución de domicilio ya hecha por RENIEC (domicilio revertido o restituido, error en el proceso)." }
   ],
