@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { FeatureCollection } from 'geojson'
 import {
-  casosDeDistrito, ciudadanosPorCategoria, conteoPorCanal, conteoPorCategoria, denunciasPorDepartamento,
+  casosDeDistrito, contarAlertas, ciudadanosPorCategoria, conteoPorCanal, conteoPorCategoria, denunciasPorDepartamento,
   enriquecerDistritos, enriquecerProvincias, filtrarCascada, formatoFecha, formatoMiles, nombresProvincia, opcionesCascada,
   puntosDistrito, puntosGeojson, ubigeosConAlerta,
 } from './agregados'
@@ -25,6 +25,10 @@ describe('conteos', () => {
   it('por canal', () => expect(conteoPorCanal(casos)).toEqual({ RENIEC: 2, ONPE: 1 }))
   it('casos de un distrito', () => {
     expect(casosDeDistrito([caso({ item: 1 }), caso({ item: 2, ubigeo_inei: '020202' })], '020202').map((c) => c.item)).toEqual([2])
+  })
+  it('cuenta las denuncias con alerta', () => {
+    expect(contarAlertas([caso({ item: 1, alerta: true }), caso({ item: 2 }), caso({ item: 3, alerta: true })])).toBe(2)
+    expect(contarAlertas([])).toBe(0)
   })
   it('por departamento: ordena de mayor a menor y omite los sin territorio', () => {
     const r = denunciasPorDepartamento([

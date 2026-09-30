@@ -44,10 +44,19 @@ export interface PinturaCoropleta {
   opacidad: number
 }
 
+// Tramos de la coropleta de Territorio (denuncias por provincia). La leyenda lee esta misma tabla.
+export const ESCALA_DENUNCIAS = [
+  { desde: 1, color: '#f2e2b8', etiqueta: '1' },
+  { desde: 2, color: '#e3c17c', etiqueta: '2–3' },
+  { desde: 4, color: '#c98f2e', etiqueta: '4–6' },
+  { desde: 7, color: '#8f5a06', etiqueta: '7 o más' },
+]
+export const COLOR_SIN_DENUNCIAS = '#e6e3d8'
+
 export function pinturaCoropleta(f: Fondo): PinturaCoropleta {
   const conFondo = f !== 'ninguno'
   return {
-    colorRelleno: ['step', ['get', 'n'], conFondo ? 'rgba(230,227,216,0)' : '#e6e3d8', 1, '#f2e2b8', 2, '#e3c17c', 4, '#c98f2e', 7, '#8f5a06'],
+    colorRelleno: ['step', ['get', 'n'], conFondo ? 'rgba(230,227,216,0)' : COLOR_SIN_DENUNCIAS, ...ESCALA_DENUNCIAS.flatMap((t) => [t.desde, t.color])] as ExpressionSpecification,
     opacidad: f === 'ninguno' ? 1 : f === 'gris' ? 0.74 : f === 'osm' ? 0.68 : 0.7,
   }
 }

@@ -64,7 +64,7 @@ export default function Mapas(p: Props) {
         <article className="tarjeta tarjeta-territorio">
           <header className="tarjeta-cab">
             <h2>Territorio</h2>
-            <p>¿Dónde se concentra y dónde ya verificamos?</p>
+            <p>¿Dónde se concentran las denuncias y dónde ya se realizó verificación domiciliaria?</p>
           </header>
           <div className="mapa" ref={contT} aria-label="Mapa de territorio: denuncias por provincia" />
           <LeyendaTerritorio />

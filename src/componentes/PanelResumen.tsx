@@ -1,9 +1,11 @@
 import type { CSSProperties } from 'react'
 import type { Datos } from '../tipos'
 import { formatoMiles } from '../logica/agregados'
+import BarraOrigen from './BarraOrigen'
 
 export default function PanelResumen({ datos }: { datos: Datos }) {
-  const { cifras, por_categoria: por, corte } = datos.meta
+  const { meta } = datos
+  const { cifras, por_categoria: por, corte } = meta
   const max = Math.max(1, ...Object.values(por))
   return (
     <div className="panel-in">
@@ -12,10 +14,17 @@ export default function PanelResumen({ datos }: { datos: Datos }) {
         <div className="kpi"><b>{cifras.denuncias}</b><span>denuncias</span></div>
         <div className="kpi"><b>{cifras.distritos}</b><span>distritos</span></div>
         <div className="kpi"><b>{formatoMiles(cifras.ciudadanos)}</b><span>ciudadanos ({cifras.ciudadanos_con_dato} con dato)</span></div>
-        <div className="kpi"><b>{cifras.alertas}</b><span>con alerta ⚑</span></div>
+        <div className="kpi kpi-alerta"><b>{cifras.alertas}</b><span>con alerta ⚑<em> (posible conflicto o violencia)</em></span></div>
         <div className="kpi"><b>{cifras.en_distrito_verificado}</b><span>en distrito verificado</span></div>
-        <div className="kpi"><b>{cifras.distritos_verificados}</b><span>distritos verificados</span></div>
+        <div className="kpi"><b>{cifras.distritos_verificados}</b><span>distritos con verificación realizada</span></div>
       </div>
+      {meta.restituidos && (
+        <section className="vbox">
+          <h4>Ciudadanos restituidos a su domicilio anterior</h4>
+          <div className="cifra-v"><b>{formatoMiles(meta.restituidos.total)}</b><span>en {meta.restituidos.distritos} distritos</span></div>
+          <BarraOrigen r={meta.restituidos} />
+        </section>
+      )}
       <strong>Por categoría</strong>
       {datos.config.categorias.map((c) => (
         <div className="barra-cat" key={c.id} style={{ '--c': c.color } as CSSProperties}>

@@ -28,6 +28,10 @@ export function casosDeDistrito(casos: Caso[], ubigeo: string): Caso[] {
   return casos.filter((c) => c.ubigeo_inei === ubigeo)
 }
 
+export function contarAlertas(casos: Caso[]): number {
+  return casos.filter((c) => c.alerta).length
+}
+
 export interface FilaDepartamento {
   departamento: string
   total: number

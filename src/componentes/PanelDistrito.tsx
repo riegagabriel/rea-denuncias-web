@@ -1,43 +1,28 @@
 import type { CSSProperties } from 'react'
 import type { Datos, Distrito } from '../tipos'
-import { casosDeDistrito, formatoFecha, formatoMiles } from '../logica/agregados'
+import BarraOrigen from './BarraOrigen'
+import { casosDeDistrito, contarAlertas, formatoFecha, formatoMiles } from '../logica/agregados'
 
 function BloqueVerificacion({ d }: { d: Distrito }) {
   const v = d.verificacion
-  if (!v) return null
-  if (v.tipo !== 'resolucion') {
-    return (
-      <section className="vbox">
-        <h4>Verificación domiciliaria</h4>
-        <div className="abc">Verificación puntual registrada; sin cifras por situación.</div>
-      </section>
-    )
-  }
-  const a = v.A ?? 0
-  const b = v.B ?? 0
-  const c = v.C ?? 0
-  const t = a + b + c || 1
+  const r = d.restituidos
+  if (!v && !r) return null
   return (
     <section className="vbox">
-      <h4>Verificación domiciliaria</h4>
-      <div className="abc">
-        Resolución {v.resolucion}
-        {v.publicada && ` · publicada ${formatoFecha(v.publicada)}`}
-      </div>
-      <div className="vbarra" role="img" aria-label={`Reside ${a}, no reside ${b}, dirección no existe ${c}`}>
-        <i style={{ width: `${(a / t) * 100}%`, background: '#5b8f5b' }} />
-        <i style={{ width: `${(b / t) * 100}%`, background: '#c98f2e' }} />
-        <i style={{ width: `${(c / t) * 100}%`, background: '#8a3b3b' }} />
-      </div>
-      <div className="abc">
-        <span><b>{formatoMiles(a)}</b> reside (A)</span>
-        <span><b>{formatoMiles(b)}</b> no reside (B)</span>
-        <span><b>{formatoMiles(c)}</b> dirección no existe (C)</span>
-      </div>
-      <div className="abc" style={{ marginTop: 4 }}>{formatoMiles(v.domicilios)} domicilios verificados</div>
-      {v.url && (
-        <div style={{ marginTop: 6 }}>
-          <a className="enlace" href={v.url} target="_blank" rel="noopener noreferrer">Ver resolución (PDF)</a>
+      <h4>
+        {v ? <><span className="punto-ver punto-ver-sm" />Se realizó verificación domiciliaria</> : 'Sin verificación domiciliaria de RENIEC'}
+      </h4>
+      {v && (
+        <div className="cifra-v">
+          {v.tipo === 'resolucion' && v.domicilios !== null
+            ? <><b>{formatoMiles(v.domicilios)}</b><span>ciudadanos verificados</span></>
+            : <span>Sin cifra de ciudadanos verificados.</span>}
+        </div>
+      )}
+      {r && (
+        <div className={v ? 'rest' : 'rest rest-solo'}>
+          <div className="cifra-v"><b>{formatoMiles(r.total)}</b><span>ciudadanos restituidos a su domicilio anterior</span></div>
+          <BarraOrigen r={r} />
         </div>
       )}
     </section>
@@ -55,18 +40,20 @@ export default function PanelDistrito({ datos, ubigeo, alAcercar, alLimpiar }: P
   const d = datos.distritos.find((x) => x.ubigeo_inei === ubigeo)
   if (!d) return <div className="panel-in"><p>Distrito no encontrado.</p></div>
   const casos = casosDeDistrito(datos.casos, ubigeo)
-  const hayAlerta = casos.some((c) => c.alerta)
+  const nAlertas = contarAlertas(casos)
   return (
     <div className="panel-in">
       <div className="panel-cab"><small>{d.departamento} · {d.provincia}</small><h3>{d.distrito}</h3></div>
       <div className="tags">
-        {hayAlerta && <span className="tag tag-alerta">⚑ ALERTA</span>}
-        {d.verificacion && <span className="tag tag-ver">▨ Distrito verificado</span>}
+        {nAlertas > 0 && <span className="tag tag-alerta">⚑ {nAlertas} con alerta</span>}
+        {d.verificacion && <span className="tag tag-ver">● Verificación realizada</span>}
       </div>
       <div className="kpis">
         <div className="kpi"><b>{d.denuncias}</b><span>denuncias</span></div>
-        <div className="kpi"><b>{formatoMiles(d.ciudadanos)}</b><span>ciudadanos</span></div>
-        <div className="kpi"><b>{d.verificacion ? 'Sí' : 'No'}</b><span>verificado</span></div>
+        <div className={nAlertas > 0 ? 'kpi kpi-alerta' : 'kpi'}>
+          <b>{nAlertas}</b><span>con alerta ⚑<em> (posible conflicto o violencia)</em></span>
+        </div>
+        <div className="kpi"><b>{d.restituidos ? formatoMiles(d.restituidos.total) : '—'}</b><span>restituidos</span></div>
       </div>
       {casos.length === 0 && <p className="ayuda">Sin denuncias en este distrito; solo consta la verificación.</p>}
       {casos.map((c) => {

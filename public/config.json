@@ -4,9 +4,9 @@
   "pie": "Denuncias del Registro de Alertas Electorales · SDPEG · Dirección de Registro Electoral · RENIEC",
   "categorias": [
     { "id": 1, "nombre": "Impugnación o depuración de electores", "color": "#2a78d6",
-      "descripcion": "Se pide excluir, depurar o anular el domicilio de electores concretos señalados como no residentes, por lo general con lista nominal o constancia de no residencia." },
+      "descripcion": "Se solicita excluir, depurar o anular el domicilio de electores concretos señalados como no residentes, por lo general con lista nominal o constancia de no residencia." },
     { "id": 2, "nombre": "Verificación o fiscalización de domicilio", "color": "#008300",
-      "descripcion": "Se pide que RENIEC verifique o fiscalice los domicilios de una localidad o de un grupo de electores, por un aumento atípico de electores o de cambios de domicilio." },
+      "descripcion": "Se solicita que RENIEC verifique o fiscalice los domicilios de una localidad o de un grupo de electores, por un aumento atípico de electores o de cambios de domicilio." },
     { "id": 3, "nombre": "Solicitud de padrón o información", "color": "#4a3aa7",
       "descripcion": "Una institución o un ciudadano pide el padrón, estadísticas o información sobre cambios domiciliarios, sin pedir todavía una acción sobre electores concretos." },
     { "id": 4, "nombre": "Denuncia o alerta preventiva", "color": "#1baf7a",

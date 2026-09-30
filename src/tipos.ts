@@ -28,6 +28,12 @@ export interface Cifras {
   alertas: number
 }
 
+export interface Restituidos {
+  total: number
+  reniec: number
+  jne: number
+}
+
 export interface Meta {
   corte: string
   generado: string
@@ -35,6 +41,7 @@ export interface Meta {
   cifras: Cifras
   por_categoria: Record<string, number>
   nota_ubigeo: string
+  restituidos: (Restituidos & { distritos: number }) | null
 }
 
 export interface Caso {
@@ -80,6 +87,7 @@ export interface Distrito {
   denuncias: number
   ciudadanos: number | null
   verificacion: Verificacion | null
+  restituidos: Restituidos | null
 }
 
 export type Fondo = 'ninguno' | 'gris' | 'osm' | 'openfreemap'

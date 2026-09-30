@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { FONDOS, URL_OPENFREEMAP, esErrorDeFondo, estiloParaFondo, opacidadRellenoPais, pinturaCoropleta } from './estiloBase'
+import { ESCALA_DENUNCIAS, FONDOS, URL_OPENFREEMAP, esErrorDeFondo, estiloParaFondo, opacidadRellenoPais, pinturaCoropleta } from './estiloBase'
 
 type Capa = { type: string; paint?: Record<string, number> }
 
@@ -41,6 +41,17 @@ describe('pinturaCoropleta', () => {
       expect(p.opacidad).toBeLessThan(1)
       expect((p.colorRelleno as unknown[])[2]).toBe('rgba(230,227,216,0)')
     }
+  })
+})
+
+describe('ESCALA_DENUNCIAS (leyenda de la coropleta)', () => {
+  it('coincide con los tramos y colores que pinta el mapa', () => {
+    const e = pinturaCoropleta('ninguno').colorRelleno as unknown[]
+    const tramos = e.slice(3) // tras ['step', entrada, color base]
+    expect(tramos).toEqual(ESCALA_DENUNCIAS.flatMap((t) => [t.desde, t.color]))
+  })
+  it('tiene etiqueta legible en cada tramo', () => {
+    expect(ESCALA_DENUNCIAS.map((t) => t.etiqueta)).toEqual(['1', '2–3', '4–6', '7 o más'])
   })
 })
 

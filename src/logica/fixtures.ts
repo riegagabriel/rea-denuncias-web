@@ -13,7 +13,7 @@ export function distrito(o: Partial<Distrito> = {}): Distrito {
   return {
     ubigeo_inei: '010101', departamento: 'AMAZONAS', provincia: 'CHACHAPOYAS', distrito: 'CHACHAPOYAS',
     clave_provincia: 'AMAZONAS|CHACHAPOYAS', lon: -77.8, lat: -6.2, bbox: [-78, -6.4, -77.6, -6.0],
-    denuncias: 0, ciudadanos: null, verificacion: null, ...o,
+    denuncias: 0, ciudadanos: null, verificacion: null, restituidos: null, ...o,
   }
 }
 
