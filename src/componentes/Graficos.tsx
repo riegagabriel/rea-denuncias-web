@@ -3,13 +3,27 @@ import * as Plot from '@observablehq/plot'
 import type { Caso, Config } from '../tipos'
 import { conteoPorCanal } from '../logica/agregados'
 
+// Ancho útil del gráfico: el del contenedor menos su relleno (16 px por lado).
+const anchoUtil = (c: HTMLElement) => Math.max(280, c.clientWidth - 32)
+
 function useGrafico(dibujar: (contenedor: HTMLDivElement) => void, deps: unknown[]) {
   const ref = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     const contenedor = ref.current
     if (!contenedor) return
-    contenedor.innerHTML = ''
-    dibujar(contenedor)
+    let ancho = 0
+    const pintar = () => {
+      contenedor.innerHTML = ''
+      dibujar(contenedor)
+    }
+    // Redibuja solo cuando cambia el ancho (ventana, panel lateral), no cada vez que el gráfico crece en alto.
+    const obs = new ResizeObserver(() => {
+      if (contenedor.clientWidth === ancho) return
+      ancho = contenedor.clientWidth
+      pintar()
+    })
+    obs.observe(contenedor)
+    return () => obs.disconnect()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
   return ref
@@ -23,6 +37,7 @@ export function BarrasDepartamento({ casos, config }: { casos: Caso[]; config: C
       const nDep = new Set(conTerritorio.map((c) => c.departamento)).size
       contenedor.append(
         Plot.plot({
+          width: anchoUtil(contenedor),
           marginLeft: 110,
           height: Math.max(220, nDep * 22),
           x: { label: 'Denuncias' },
@@ -39,7 +54,7 @@ export function BarrasDepartamento({ casos, config }: { casos: Caso[]; config: C
   )
   return (
     <section className="tarjeta">
-      <h2 className="grafico-titulo">Denuncias por departamento</h2>
+      <header className="tarjeta-cab"><h2>Denuncias por departamento</h2></header>
       <div ref={ref} className="grafico" />
     </section>
   )
@@ -69,7 +84,7 @@ export function DonaCanal({ casos, config }: { casos: Caso[]; config: Config }) 
   })
   return (
     <section className="tarjeta">
-      <h2 className="grafico-titulo">Canal de ingreso</h2>
+      <header className="tarjeta-cab"><h2>Canal de ingreso</h2></header>
       <div className="dona">
         <svg viewBox="0 0 180 180" width={180} height={180} role="img" aria-label="Denuncias por canal de ingreso">
           {arcos.map((a) => <path key={a.canal} d={a.path} fill={a.color} />)}
@@ -91,7 +106,8 @@ export function LineaTiempo({ casos }: { casos: Caso[] }) {
       const puntos = casos.map((c) => ({ fecha: new Date(`${c.fecha}T00:00:00`) }))
       contenedor.append(
         Plot.plot({
-          height: 180,
+          width: anchoUtil(contenedor),
+          height: 200,
           marginLeft: 40,
           x: { label: null },
           y: { label: 'Denuncias / semana', grid: true },
@@ -103,7 +119,7 @@ export function LineaTiempo({ casos }: { casos: Caso[] }) {
   )
   return (
     <section className="tarjeta ancho">
-      <h2 className="grafico-titulo">Denuncias por semana de ingreso</h2>
+      <header className="tarjeta-cab"><h2>Denuncias por semana de ingreso</h2></header>
       <div ref={ref} className="grafico" />
     </section>
   )

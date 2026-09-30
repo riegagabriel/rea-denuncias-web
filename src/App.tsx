@@ -13,7 +13,7 @@ import type { Fondo, Seleccion } from './tipos'
 export default function App() {
   const { datos, error } = useDatos()
   const [seleccion, setSeleccion] = useState<Seleccion>({ tipo: 'ninguna' })
-  const [fondo, setFondo] = useState<Fondo>('gris')
+  const [fondo, setFondo] = useState<Fondo>(window.__REA_DATA__ ? 'ninguno' : 'gris')
   const [activas, setActivas] = useState<ReadonlySet<number>>(() => new Set([1, 2, 3, 4, 5]))
   const movil = useEsMovil()
   const [pestana, setPestana] = useState<'territorio' | 'casos'>('territorio')
@@ -36,9 +36,9 @@ export default function App() {
   return (
     <>
       <Encabezado config={datos.config} meta={datos.meta} />
+      <Cifras datos={datos} />
       <div className="principal">
         <div className="columna-mapas">
-          <Cifras datos={datos} />
           <div className="pestanas" role="group" aria-label="Mapa visible">
             <button type="button" aria-pressed={pestana === 'territorio'} onClick={() => setPestana('territorio')}>Territorio</button>
             <button type="button" aria-pressed={pestana === 'casos'} onClick={() => setPestana('casos')}>Casos</button>

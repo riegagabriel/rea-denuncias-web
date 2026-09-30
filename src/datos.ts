@@ -9,6 +9,8 @@ async function leer<T>(ruta: string): Promise<T> {
 }
 
 export async function cargarDatos(): Promise<Datos> {
+  // Archivo único (doble clic, sin servidor): los datos ya vienen dentro del HTML.
+  if (window.__REA_DATA__) return window.__REA_DATA__
   const [config, meta, casos, distritos, departamentos, provincias, distritosGeo] = await Promise.all([
     leer<Config>('config.json'),
     leer<Meta>('data/meta.json'),

@@ -17,6 +17,10 @@ export default function TablaCasos({ casos, config, seleccion, alSeleccionarDist
 
   return (
     <section className="tarjeta tabla-tarjeta">
+      <header className="tarjeta-cab">
+        <h2>Detalle por denuncia</h2>
+        <p>Filtre por territorio; al hacer clic en una fila se abre el distrito en el panel.</p>
+      </header>
       <div className="tabla-filtros">
         <label>Departamento{' '}
           <select value={f.departamento} onChange={(e) => setF({ departamento: e.target.value, provincia: '', distrito: '' })}>

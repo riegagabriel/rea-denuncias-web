@@ -1,16 +1,18 @@
 import { useState } from 'react'
+import logoUrl from '../assets/reniec-logo.png'
 import type { Config, Meta } from '../tipos'
 
 export default function Encabezado({ config, meta }: { config: Config; meta: Meta }) {
   const [sinLogo, setSinLogo] = useState(false)
   return (
     <header className="encabezado">
+      <div className="enc-in">
       <div className="enc-logo">
         {sinLogo ? (
           <span className="logo-texto">RENIEC</span>
         ) : (
           <img
-            src="/reniec-logo.png"
+            src={logoUrl}
             alt="RENIEC — Registro Nacional de Identificación y Estado Civil"
             onError={() => setSinLogo(true)}
           />
@@ -24,6 +26,7 @@ export default function Encabezado({ config, meta }: { config: Config; meta: Met
         <span>Fecha de corte</span>
         <b id="fecha-corte">{meta.corte}</b>
         <small id="fuente-datos" title={meta.nota_ubigeo}>Fuente: {meta.fuente}</small>
+      </div>
       </div>
     </header>
   )

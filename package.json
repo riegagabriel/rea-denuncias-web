@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "worker:local": "rolldown node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs --format iife --file src/mapas/worker.iife.js",
+    "build:local": "npm run worker:local && tsc -b && vite build --config vite.local.config.ts"
   },
   "dependencies": {
     "@observablehq/plot": "^0.6.17",

@@ -14,13 +14,15 @@ export default function Cifras({ datos }: { datos: Datos }) {
     { valor: cifras.ciudadanos, etiqueta: `Ciudadanos (dato en ${cifras.ciudadanos_con_dato} de ${cifras.denuncias})` },
   ]
   return (
-    <div className="cifras">
-      {cajas.map((c) => (
-        <div className="cifra" key={c.etiqueta}>
-          <b>{formatoMiles(c.valor)}</b>
-          <span>{c.etiqueta}</span>
-        </div>
-      ))}
+    <section className="cifras" aria-label="Cifras del corte">
+      <div className="cifras-num">
+        {cajas.map((c) => (
+          <div className="cifra" key={c.etiqueta}>
+            <b>{formatoMiles(c.valor)}</b>
+            <span>{c.etiqueta}</span>
+          </div>
+        ))}
+      </div>
       <div className="cifra cifra-ancha">
         <span>Ciudadanos por categoría</span>
         {filas.map((f) => {
@@ -34,6 +36,6 @@ export default function Cifras({ datos }: { datos: Datos }) {
           )
         })}
       </div>
-    </div>
+    </section>
   )
 }
