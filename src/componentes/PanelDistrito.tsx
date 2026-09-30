@@ -68,9 +68,6 @@ export default function PanelDistrito({ datos, ubigeo, alAcercar, alLimpiar }: P
             {c.localidad_original && <span className="pill">Localidad: {c.localidad_original}</span>}
             {c.posterior_a_resolucion && <span className="pill">Posterior a la resolución de verificación</span>}
             {c.alerta && <div className="albox">⚑ <b>Alerta.</b> {c.alerta_motivo}</div>}
-            {c.cat === 5 && !d.verificacion && (
-              <div className="nota">Este distrito no figura en la lista de verificaciones publicada; confirmar con Operativo.</div>
-            )}
           </article>
         )
       })}
