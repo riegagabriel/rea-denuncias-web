@@ -68,6 +68,17 @@ describe('cascada Departamento > Provincia > Distrito', () => {
     expect(filtrarCascada(casos, { departamento: 'LIMA', provincia: 'HUARAL', distrito: 'CHANCAY' }).map((c) => c.item)).toEqual([2])
     expect(filtrarCascada(casos, { departamento: '', provincia: '', distrito: '' })).toHaveLength(3)
   })
+  it('soloAlerta deja únicamente las denuncias con alerta y se combina con el territorio', () => {
+    const cs = [
+      caso({ item: 1, departamento: 'LIMA', alerta: true }), caso({ item: 2, departamento: 'LIMA' }),
+      caso({ item: 3, departamento: 'CUSCO', alerta: true }), caso({ item: 4, departamento: 'ICA' }),
+    ]
+    const vacio = { departamento: '', provincia: '', distrito: '' }
+    expect(filtrarCascada(cs, { ...vacio, soloAlerta: true }).map((c) => c.item)).toEqual([1, 3])
+    expect(filtrarCascada(cs, { ...vacio, departamento: 'LIMA', soloAlerta: true }).map((c) => c.item)).toEqual([1])
+    expect(filtrarCascada(cs, { ...vacio, soloAlerta: false })).toHaveLength(4)
+    expect(filtrarCascada(cs, vacio)).toHaveLength(4)
+  })
 })
 
 describe('alertas', () => {

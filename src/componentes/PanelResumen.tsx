@@ -13,7 +13,7 @@ export default function PanelResumen({ datos }: { datos: Datos }) {
       <div className="kpis">
         <div className="kpi"><b>{cifras.denuncias}</b><span>denuncias</span></div>
         <div className="kpi"><b>{cifras.distritos}</b><span>distritos</span></div>
-        <div className="kpi"><b>{formatoMiles(cifras.ciudadanos)}</b><span>ciudadanos ({cifras.ciudadanos_con_dato} con dato)</span></div>
+        <div className="kpi"><b>{formatoMiles(cifras.ciudadanos)}</b><span>ciudadanos listados (lista en {cifras.ciudadanos_con_dato} denuncias)</span></div>
         <div className="kpi kpi-alerta"><b>{cifras.alertas}</b><span>con alerta ⚑<em> (posible conflicto o violencia)</em></span></div>
         <div className="kpi"><b>{cifras.en_distrito_verificado}</b><span>en distrito verificado</span></div>
         <div className="kpi"><b>{cifras.distritos_verificados}</b><span>distritos con verificación realizada</span></div>

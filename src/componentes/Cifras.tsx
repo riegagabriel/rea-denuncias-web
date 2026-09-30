@@ -11,7 +11,7 @@ export default function Cifras({ datos }: { datos: Datos }) {
     { valor: cifras.denuncias, etiqueta: 'Denuncias' },
     { valor: cifras.distritos, etiqueta: 'Distritos' },
     { valor: cifras.departamentos, etiqueta: 'Departamentos' },
-    { valor: cifras.ciudadanos, etiqueta: `Ciudadanos (dato en ${cifras.ciudadanos_con_dato} de ${cifras.denuncias})` },
+    { valor: cifras.ciudadanos, etiqueta: 'Ciudadanos listados en las denuncias', detalle: `Lista adjunta en ${cifras.ciudadanos_con_dato} de ${cifras.denuncias} denuncias` },
   ]
   return (
     <section className="cifras" aria-label="Cifras del corte">
@@ -20,18 +20,20 @@ export default function Cifras({ datos }: { datos: Datos }) {
           <div className="cifra" key={c.etiqueta}>
             <b>{formatoMiles(c.valor)}</b>
             <span>{c.etiqueta}</span>
+            {c.detalle && <small>{c.detalle}</small>}
           </div>
         ))}
       </div>
       <div className="cifra cifra-ancha">
-        <span>Ciudadanos por categoría</span>
+        <span>Ciudadanos listados en las denuncias, por categoría</span>
+        <small>Solo cuentan las denuncias que adjuntan la lista de ciudadanos.</small>
         {filas.map((f) => {
           const cat = datos.config.categorias.find((c) => c.id === f.cat)
           return (
             <div className="fila-ciud" key={f.cat} style={{ '--c': cat?.color } as CSSProperties}>
               <span className="t">{cat?.nombre}</span>
               <span className="b"><i style={{ width: `${(f.ciudadanos / max) * 100}%` }} /></span>
-              <span>{f.ciudadanos > 0 ? formatoMiles(f.ciudadanos) : 'sin dato'}</span>
+              <span>{f.ciudadanos > 0 ? formatoMiles(f.ciudadanos) : 'sin lista'}</span>
             </div>
           )
         })}

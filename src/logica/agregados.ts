@@ -73,6 +73,7 @@ export interface FiltroCascada {
   departamento: string
   provincia: string
   distrito: string
+  soloAlerta?: boolean
 }
 
 export function filtrarCascada(casos: Caso[], f: FiltroCascada): Caso[] {
@@ -80,7 +81,8 @@ export function filtrarCascada(casos: Caso[], f: FiltroCascada): Caso[] {
     (c) =>
       (!f.departamento || c.departamento === f.departamento) &&
       (!f.provincia || c.provincia === f.provincia) &&
-      (!f.distrito || c.distrito === f.distrito),
+      (!f.distrito || c.distrito === f.distrito) &&
+      (!f.soloAlerta || c.alerta),
   )
 }
 

@@ -62,7 +62,7 @@ export default function PanelDistrito({ datos, ubigeo, alAcercar, alLimpiar }: P
           <article className="caso-card" key={c.item} style={{ '--c': cat?.color } as CSSProperties}>
             <div className="caso-top"><span>Ítem {c.item} · {formatoFecha(c.fecha)}</span><span>{c.canal}</span></div>
             <div className="caso-nombre">{cat?.nombre}</div>
-            <div className="caso-top"><span>{c.ciudadanos !== null ? `${formatoMiles(c.ciudadanos)} ciudadanos` : 'Ciudadanos: s/d'}</span></div>
+            <div className="caso-top"><span>{c.ciudadanos !== null ? `${formatoMiles(c.ciudadanos)} ciudadanos listados` : 'Sin lista de ciudadanos'}</span></div>
             <div className="caso-top" style={{ fontSize: 11.5 }}>{c.documento}</div>
             <p>{c.observacion}</p>
             {c.localidad_original && <span className="pill">Localidad: {c.localidad_original}</span>}

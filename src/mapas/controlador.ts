@@ -1,4 +1,4 @@
-import { Map as MapaGL, type MapMouseEvent, type Marker } from 'maplibre-gl'
+import { Map as MapaGL, NavigationControl, type MapMouseEvent, type Marker } from 'maplibre-gl'
 import type { FeatureCollection } from 'geojson'
 import type { Datos, Fondo, Seleccion } from '../tipos'
 import { enriquecerDistritos, enriquecerProvincias, puntosDistrito, puntosGeojson, ubigeosConAlerta } from '../logica/agregados'
@@ -102,11 +102,14 @@ export class ControladorMapas {
       fitBoundsOptions: { padding: 6 },
       attributionControl: false,
       dragRotate: false,
+      locale: { 'NavigationControl.ZoomIn': 'Acercar', 'NavigationControl.ZoomOut': 'Alejar' },
       maxZoom: 12,
       minZoom: 2,
       canvasContextAttributes: { preserveDrawingBuffer: true }, // permite verificar con capturas de pantalla
     })
     mapa.touchZoomRotate.disableRotation()
+    // Botones + y −: para quien no domina la rueda del ratón ni el pellizco. Los dos mapas están sincronizados, así que mueven ambos.
+    mapa.addControl(new NavigationControl({ showCompass: false, visualizePitch: false }), 'top-right')
     this.cargado.set(mapa, false)
     mapa.on('error', (e) => {
       const id = (e as unknown as { sourceId?: string }).sourceId
